@@ -37,8 +37,8 @@ module.exports = {
     ],
     'import/prefer-default-export': 'off',
     'no-console': ['warn', { allow: ['warn', 'error'] }],
-    'react/prop-types': 'off',
     'react/function-component-definition': 'off',
+    'react/jsx-props-no-spreading': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-throw-literal': 'warn',
     '@typescript-eslint/consistent-type-imports': [

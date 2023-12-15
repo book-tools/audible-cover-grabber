@@ -1,14 +1,18 @@
+import { DownloadIcon } from '@chakra-ui/icons';
 import { Box, Button, Center, Flex, Spinner } from '@chakra-ui/react';
 import Cover from 'components/cover';
 import React, { useEffect, useState } from 'react';
 import { ASIN_REGEX, getAudibleBookInfo } from 'utils/audible/audible';
 import type { AudibleBook } from 'utils/audible/types';
+import getRemoteFileSize from 'utils/get-remote-file-size';
 import { tabs } from 'webextension-polyfill';
 
 const Popup = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [book, setBook] = useState<AudibleBook | null>(null);
+
+  const [imageSize, setImageSize] = useState<number | null>(null);
 
   useEffect(() => {
     const intialize = async () => {
@@ -22,6 +26,12 @@ const Popup = () => {
         const asin = url.pathname.split('/').filter(Boolean).pop();
         if (asin && ASIN_REGEX.test(asin)) {
           const audibleBook = await getAudibleBookInfo(asin);
+          if (audibleBook?.largeCoverUrl) {
+            const imageFileSize = await getRemoteFileSize(
+              audibleBook.largeCoverUrl,
+            );
+            setImageSize(imageFileSize);
+          }
           setBook(audibleBook);
         }
       }
@@ -46,7 +56,7 @@ const Popup = () => {
 
     return (
       <Flex direction="column" gap={4}>
-        <Cover book={book} />
+        <Cover book={book} fileSize={imageSize} />
 
         <Button
           w="full"
@@ -55,6 +65,7 @@ const Popup = () => {
           download
           colorScheme="blue"
           size="sm"
+          leftIcon={<DownloadIcon />}
         >
           Download
         </Button>
