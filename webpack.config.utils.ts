@@ -177,7 +177,7 @@ export const getZipPlugins = (
   outputDir = Directories.DIST_DIR,
 ) => [
   new ZipPlugin({
-    path: path.resolve(process.cwd(), `${outputDir}/${browserDir}`),
+    path: path.resolve(process.cwd(), outputDir),
     filename: browserDir,
     extension: 'zip',
     fileOptions: {
