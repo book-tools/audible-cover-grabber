@@ -4,7 +4,7 @@ This is a very very basic browser extension to grab high resolution cover images
 
 ![preview](preview/example.png)
 
-### Installation Instructions
+## Installation Instructions
 
 This extension has built versions for all major browsers except Safari, however I only really tested it with Chrome so I'm only going to include instructions for that. If you want to try it out with another browser, you can download one of the other release options and give it a shot!
 
@@ -17,7 +17,7 @@ This extension has built versions for all major browsers except Safari, however 
 
 And that's it! If you have any trouble, feel free to leave an issue on this repo.
 
-**Note**
+###
 
 Every time you open Chrome it may warn you about running extensions in developer mode, just click &#10005; to keep the extension enabled.
 
