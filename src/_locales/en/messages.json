@@ -1,15 +1,7 @@
 {
-  "appVersion": {
-    "message": "0.1.2",
-    "description": "The current version of the extension."
-  },
   "appName": {
     "message": "Audible Cover Grabber",
     "description": "The name of the extension."
-  },
-  "appAuthor": {
-    "message": "Chris Sandvik",
-    "description": "The auhor of the extension."
   },
   "appDescription": {
     "message": "Get high resolution cover art from Audible.com",
