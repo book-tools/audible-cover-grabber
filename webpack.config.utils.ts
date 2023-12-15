@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { ProgressPlugin, DefinePlugin } from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import ZipPlugin from 'zip-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-
 import path from 'path';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { DefinePlugin, ProgressPlugin } from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import WebpackExtensionManifestPlugin from 'webpack-extension-manifest-plugin';
-
-const ExtReloader = require('webpack-ext-reloader-mv3');
+import ZipPlugin from 'zip-webpack-plugin';
 
 const dotenv = require('dotenv').config({ path: `${__dirname}/.env` });
+const ExtReloader = require('webpack-ext-reloader-mv3');
+
+const pkg = require('./package.json');
 
 const baseManifestChrome: chrome.runtime.ManifestV3 = require('./src/baseManifest_chrome.json');
+const baseManifestEdge: chrome.runtime.ManifestV3 = require('./src/baseManifest_edge.json');
 const baseManifestFirefox: chrome.runtime.ManifestV3 = require('./src/baseManifest_firefox.json');
 const baseManifestOpera: chrome.runtime.ManifestV3 = require('./src/baseManifest_opera.json');
-const baseManifestEdge: chrome.runtime.ManifestV3 = require('./src/baseManifest_edge.json');
 
 const baseManifest = {
   chrome: baseManifestChrome,
@@ -27,6 +27,8 @@ const baseManifest = {
 };
 
 type BrowserTarget = keyof typeof baseManifest;
+
+export const prefixDir = (browserDir: string) => `${pkg.name}-${browserDir}`;
 
 const isBrowserTarget = (
   target: string | undefined,
@@ -97,15 +99,6 @@ export const getHTMLPlugins = (
     template: path.resolve(__dirname, `${sourceDir}/popup/index.html`),
     chunks: ['popup'],
   }),
-  new HtmlWebpackPlugin({
-    title: 'Options',
-    filename: path.resolve(
-      __dirname,
-      `${outputDir}/${browserDir}/options/index.html`,
-    ),
-    template: path.resolve(__dirname, `${sourceDir}/options/index.html`),
-    chunks: ['options'],
-  }),
 ];
 
 /**
@@ -143,9 +136,6 @@ export const getOutput = (
  */
 export const getEntry = (sourceDir = Directories.SRC_DIR) => ({
   popup: [path.resolve(__dirname, `${sourceDir}/popup/index.tsx`)],
-  options: [path.resolve(__dirname, `${sourceDir}/options/options.tsx`)],
-  content: [path.resolve(__dirname, `${sourceDir}/content/index.tsx`)],
-  background: [path.resolve(__dirname, `${sourceDir}/background/index.ts`)],
 });
 
 /**
@@ -238,14 +228,9 @@ export const getResolves = () => ({
   alias: {
     utils: path.resolve(__dirname, './src/utils/'),
     popup: path.resolve(__dirname, './src/popup/'),
-    background: path.resolve(__dirname, './src/background/'),
-    options: path.resolve(__dirname, './src/options/'),
-    content: path.resolve(__dirname, './src/content/'),
     assets: path.resolve(__dirname, './src/assets/'),
     components: path.resolve(__dirname, './src/components/'),
     types: path.resolve(__dirname, './src/types/'),
-    hooks: path.resolve(__dirname, './src/hooks/'),
-    '@redux': path.resolve(__dirname, './src/@redux/'),
   },
   extensions: ['.js', '.jsx', '.ts', '.tsx'],
 });
@@ -297,9 +282,7 @@ export const getExtensionReloaderPlugins = () => [
     port: 9090,
     reloadPage: true,
     entries: {
-      contentScript: ['content'],
-      background: 'background',
-      extensionPage: ['popup', 'options'],
+      extensionPage: ['popup'],
     },
   }),
 ];

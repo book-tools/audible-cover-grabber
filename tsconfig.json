@@ -6,7 +6,7 @@
     "baseUrl": "./src",
     "esModuleInterop": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2015",
     "allowJs": true,
     "jsx": "react",
     "sourceMap": true,
@@ -23,7 +23,6 @@
       "assets/*": ["./assets/*"],
       "components/*": ["./components/*"],
       "types/*": ["./types/*"],
-      "@redux/*": ["./@redux/*"],
       "@hooks/*": ["./hooks/*"]
     },
     "typeRoots": ["node_modules/@types", "./src/types"]

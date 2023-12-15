@@ -1,21 +1,22 @@
 import TerserPlugin from 'terser-webpack-plugin';
 import type webpack from 'webpack';
 import {
+  Directories,
+  config,
+  getAnalyzerPlugins,
+  getCleanWebpackPlugins,
+  getCopyPlugins,
+  getDefinePlugins,
+  getEntry,
+  getEslintPlugins,
+  getExtensionManifestPlugins,
+  getExtensionReloaderPlugins,
   getHTMLPlugins,
   getOutput,
-  getCopyPlugins,
-  getZipPlugins,
-  getEntry,
-  getResolves,
-  getDefinePlugins,
-  getCleanWebpackPlugins,
-  config,
-  getExtensionManifestPlugins,
-  getEslintPlugins,
   getProgressPlugins,
-  getExtensionReloaderPlugins,
-  Directories,
-  getAnalyzerPlugins,
+  getResolves,
+  getZipPlugins,
+  prefixDir,
 } from './webpack.config.utils';
 
 let generalConfig: webpack.Configuration = {
@@ -27,42 +28,35 @@ let generalConfig: webpack.Configuration = {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        use: [
-          {
-            loader: 'ts-loader',
-            // options: {
-            //     transpileOnly: true,
-            // },
-          },
-        ],
+        use: [{ loader: 'ts-loader' }],
         exclude: /node_modules/,
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader' },
-          { loader: 'sass-loader' },
-        ],
       },
     ],
   },
   resolve: getResolves(),
   entry: getEntry(Directories.SRC_DIR),
-  output: getOutput(config.TARGET, config.OUTPUT_DIR),
+  output: getOutput(prefixDir(config.TARGET), config.OUTPUT_DIR),
 };
 
 let plugins: webpack.WebpackPluginInstance[] = [
   ...getCleanWebpackPlugins(
-    `${config.OUTPUT_DIR}/${config.TARGET}`,
-    `${Directories.DIST_DIR}/${config.TARGET}`,
+    `${config.OUTPUT_DIR}/${prefixDir(config.TARGET)}`,
+    `${Directories.DIST_DIR}/${prefixDir(config.TARGET)}`,
   ),
   ...getProgressPlugins(),
   ...getEslintPlugins(),
   ...getDefinePlugins(),
   ...getExtensionManifestPlugins(),
-  ...getHTMLPlugins(config.TARGET, config.OUTPUT_DIR, Directories.SRC_DIR),
-  ...getCopyPlugins(config.TARGET, config.OUTPUT_DIR, Directories.SRC_DIR),
+  ...getHTMLPlugins(
+    prefixDir(config.TARGET),
+    config.OUTPUT_DIR,
+    Directories.SRC_DIR,
+  ),
+  ...getCopyPlugins(
+    prefixDir(config.TARGET),
+    config.OUTPUT_DIR,
+    Directories.SRC_DIR,
+  ),
 ];
 
 if (config.NODE_ENV === 'development') {
@@ -141,7 +135,10 @@ if (config.NODE_ENV === 'production') {
     },
   };
 
-  plugins = [...plugins, ...getZipPlugins(config.TARGET, Directories.DIST_DIR)];
+  plugins = [
+    ...plugins,
+    ...getZipPlugins(prefixDir(config.TARGET), Directories.DIST_DIR),
+  ];
 }
 
 export default [

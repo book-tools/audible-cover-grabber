@@ -1,10 +1,14 @@
 {
   "appName": {
-    "message": "React Extension Boilerplate",
-    "description": "The name of the react extension."
+    "message": "Audible Cover Grabber",
+    "description": "The name of the extension."
+  },
+  "appAuthor": {
+    "message": "Chris Sandvik",
+    "description": "The auhor of the extension."
   },
   "appDescription": {
-    "message": "Boilerplate for building cross browser extensions",
+    "message": "Get high resolution cover art from Audible.com",
     "description": "The description of the extension."
   },
   "btnTooltip": {

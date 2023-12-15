@@ -1,1 +1,5 @@
+node_modules
+dev
+dist
+temp
 .eslintrc.js

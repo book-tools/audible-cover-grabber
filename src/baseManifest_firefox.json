@@ -1,56 +1,36 @@
 {
   "name": "__MSG_appName__",
-  "author": "WebDEV",
+  "author": "__MSG_appAuthor__",
   "version": "3.0",
   "manifest_version": 3,
   "description": "__MSG_appDescription__",
   "icons": {
-    "16": "assets/icons/icon-16.png",
-    "24": "assets/icons/icon-24.png",
-    "64": "assets/icons/icon-64.png",
-    "128": "assets/icons/icon-128.png"
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
   },
   "default_locale": "en",
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["content/content.js"]
-    }
-  ],
-  "background": {
-    "scripts": ["background/background.js"],
-    "type": "module"
-  },
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs"],
   "host_permissions": ["http://*/*", "https://*/*"],
-  "options_ui": {
-    "page": "options/index.html",
-    "browser_style": false
-  },
   "action": {
     "default_icon": {
-      "16": "assets/icons/icon-16.png",
-      "48": "assets/icons/icon-48.png"
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png"
     },
-    "default_title": "Extension Boilerplate",
+    "default_title": "__MSG_appName__",
     "default_popup": "popup/index.html",
     "browser_style": false
   },
   "web_accessible_resources": [
     {
-      "resources": [
-        "assets/*",
-        "content/*",
-        "options/*",
-        "popup/*",
-        "background/*"
-      ],
+      "resources": ["assets/*", "popup/*"],
       "matches": ["<all_urls>"]
     }
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "react-extension-boilerplate@test.com"
+      "id": "audible-cover-grabber"
     }
   }
 }

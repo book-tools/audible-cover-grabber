@@ -1,12 +1,12 @@
 {
-  "name": "react-extension-boilerplate",
+  "name": "audible-cover-grabber",
   "version": "3.0.0",
-  "description": "Boilerplate for Chrome, FF, Opera extension",
-  "license": "./LICENSE",
-  "author": "Web Dev",
+  "description": "A browser extension to get high resolution covers from Audible",
+  "license": "./LICENSE.md",
+  "author": "Chris Sandvik <chris.sandvik@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/csandman/react-extension-boilerplate"
+    "url": "https://github.com/book-tools/audible-cover-grabber"
   },
   "main": "webpack.config.js",
   "scripts": {
@@ -32,40 +32,29 @@
     "upload:opera": "cross-env NODE_ENV=upload TARGET=opera webpack"
   },
   "dependencies": {
-    "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^11.0.0",
-    "core-js": "^3.34.0",
-    "cross-env": "^7.0.3",
-    "css-loader": "^6.8.1",
-    "dotenv": "^16.3.1",
-    "html-webpack-plugin": "^5.5.4",
-    "prop-types": "^15.8.1",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "framer-motion": "^10.16.16",
+    "html-to-text": "^9.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sass": "^1.69.5",
-    "sass-loader": "^13.3.2",
-    "style-loader": "^3.3.3",
-    "terser-webpack-plugin": "^5.3.9",
-    "ts-node": "^10.9.2",
-    "webextension-polyfill": "^0.10.0",
-    "webpack": "^5.89.0",
-    "webpack-bundle-analyzer": "^4.10.1",
-    "webpack-ext-reloader-mv3": "^2.1.1",
-    "webpack-extension-manifest-plugin": "^0.8.0",
-    "zip-webpack-plugin": "^4.0.1"
+    "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.254",
-    "@types/inboxsdk": "^2.0.14",
-    "@types/lodash": "^4.14.202",
+    "@types/html-to-text": "^9.0.4",
     "@types/node": "^20.10.4",
     "@types/react": "^18.2.44",
     "@types/react-dom": "^18.2.17",
-    "@types/react-router-dom": "^5.3.3",
     "@types/webpack-bundle-analyzer": "^4.6.3",
     "@types/zip-webpack-plugin": "^3.0.6",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
     "eslint": "^8.55.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -78,9 +67,17 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "eslint-webpack-plugin": "^4.0.1",
+    "html-webpack-plugin": "^5.5.4",
     "prettier": "^3.1.1",
+    "terser-webpack-plugin": "^5.3.9",
     "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "webpack-cli": "^5.1.4"
+    "webpack": "^5.89.0",
+    "webpack-bundle-analyzer": "^4.10.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-ext-reloader-mv3": "^2.1.1",
+    "webpack-extension-manifest-plugin": "^0.8.0",
+    "zip-webpack-plugin": "^4.0.1"
   }
 }

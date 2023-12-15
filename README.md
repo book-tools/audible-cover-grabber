@@ -1,104 +1,24 @@
-# React Extension Boilerplate
+# Audible Cover Grabber
 
-Works for Chrome, Opera, Edge & Firefox.
+This is a very very basic browser extension to grab high resolution cover images for any Audible book using the API. It might be expanded on in the future, but for now it's just a simple single image download tool.
 
-![preview](preview/Sep-21-2020%2015-15-55.gif)
+![preview](preview/example.png)
 
-## Features
+### Installation Instructions
 
-> - **_Supports Manifest Version 3_**
-> - **_Write in your favorite framework - React! :)_**
->
->   Now you can create part of your extensions in React framework - as you wish ;)
->
-> - **_Write once and deploy to Chrome, Opera, Edge & Firefox_**
->
->   Based on `webextension-polyfill`. It also includes a tiny polyfill to bring uniformity to the APIs exposed by different browsers.
->
-> - **_Live-reload_**
->
->   Your changes to CSS, HTML & JS files will be relayed instantly without having
->   to manually reload the extension. This ends up saving a lot of time and
->   improving the developer experience. Based on `web-ext-reloader-mv3`
->
-> - **_Newest js technology stack_**
->
->   You can use `Typescript` or `Babel`
->
-> - **_Profiling JS Packages_**
->
-> ![Profile](preview/profile-chrome.png)
->
-> - **_Comfortable styles import_**
->
->   With react you can load styles directly and you can use scss for styling.
->
-> - **_Easily configurable and extendable_**
->
->   Project use webpack so you can easily customize your project depends on your needs.
->   In config.json you can define source path for each browser
->   (if needed - default it's the same source), destination and develop directory.
->
-> - **_Clean code_**
->
->   Clean code is the best way for long term support for project. Boilerplate has
->   fully configured eslint with airbnb style guide.
->
-> - **_Test your components!_**
->
->   Project use some library which support your testing process.
->   As test runner we use karma, as testing framework mocha.
->   As support to assertion we use chai.
+This extension has built versions for all major browsers except Safari, however I only really tested it with Chrome so I'm only going to include instructions for that. If you want to try it out with another browser, you can download one of the other release options and give it a shot!
 
-## Run & Installation
+1. Download the latest release from [the releases page](https://github.com/book-tools/audible-cover-grabber/releases).
+2. Unzip the file and you should have a folder named `audible-cover-grabber-<browser>`.
+3. Put this folder in a place where you won't touch it. Chrome will always access it from that location once you load it in, so don't move it once it's been added to Chrome.
+4. In Chrome go to the extensions page (`chrome://extensions`).
+5. Enable "Developer Mode" by toggling the switch in the top right of the page.
+6. Drag the `audible-cover-grabber-<browser>` folder anywhere on the page to import it (do not delete the folder afterwards). Alternatively, you can click "Load Unpacked Extension" and locate the folder using your file browser.
 
-> ### Run & Build
->
-> > 1.  Clone the repository `git clone https://github.com/WebExp0528/React-Extension-Boilerplate.git`. If you want to use Babel, `git clone --single-branch --branch babel https://github.com/WebExp0528/React-Extension-Boilerplate.git`
-> > 2.  Run `npm install` or `yarn install`
-> > 3.  Run `npm run build:{target browser}` or `yarn build:{target browser}`. EX: `yarn build:chrome`
-> >
-> > Note: You can [download](https://github.com/WebExp0528/React-Extension-Boilerplate/releases/latest) build file
->
-> ### Load the extension in Chrome & Opera
->
-> > 1.  Open Chrome/Opera browser and navigate to chrome://extensions
-> > 2.  Select "Developer Mode" and then click "Load unpacked extension..."
-> > 3.  From the file browser, choose to `React-Extension-Boilerplate/dev/chrome`
-> >     or > (`React-Extension-Boilerplate/dev/opera`)
->
-> ### Load the extension in Firefox
->
-> > 1. Open Firefox browser and navigate to about:debugging
-> > 2. Click "Load Temporary Add-on" and from the file browser, choose >>`React-Extension-Boilerplate/dev/firefox`
->
-> ### Load the extension in Edge
->
-> > <https://docs.microsoft.com/en-us/microsoft-edge/extensions/guides/>adding-and-removing-extensions>
+And that's it! If you have any trouble, feel free to leave an issue on this repo.
 
-## Developing
+**Note**
 
-> The following tasks can be used when you want to start developing the extension
-> and want to enable live reload -
-> `npm run dev:{target browser}` or `yarn dev:{target browser}`
+Every time you open Chrome it may warn you about running extensions in developer mode, just click &#10005; to keep the extension enabled.
 
-## Profiling
-
-> Run `npm run profile:{target browser}` or `yarn profile:{target browser}`
-
-## Packaging
-
-> Run `npm run build:{target browser}` or `yarn build:{target browser}` to create a zipped,
-> production-ready extension for each browser.
-> You can then upload that to the app store.
-
-## Available Target Browsers
-
-> `chrome` `firefox` `opera` `edge`
-
----
-
-This project is licensed under the MIT license.
-
-If you have any questions or comments, please create a new issue.
-I'd be happy to hear your thoughts.
+![preview](preview/installation-demo.gif)

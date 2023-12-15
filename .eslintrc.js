@@ -14,7 +14,7 @@ module.exports = {
       version: 'detect',
     },
   },
-  plugins: ['@typescript-eslint', 'tsdoc', 'deprecation'],
+  plugins: ['@typescript-eslint', 'tsdoc', 'deprecation', 'import'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -29,7 +29,14 @@ module.exports = {
     'arrow-body-style': 'off',
     'class-methods-use-this': 'off',
     curly: 'error',
+    'import/order': [
+      'warn',
+      {
+        alphabetize: { order: 'asc' },
+      },
+    ],
     'import/prefer-default-export': 'off',
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
     'react/prop-types': 'off',
     'react/function-component-definition': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
