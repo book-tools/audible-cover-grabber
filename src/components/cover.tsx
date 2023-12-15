@@ -40,7 +40,7 @@ const Cover = ({ book }: CoverProps) => {
           borderBottomWidth={1}
           borderLeftWidth={1}
         >
-          {resolution.width} &times; {resolution.height}
+          {resolution.width} x {resolution.height}
         </Box>
       )}
       <Image
