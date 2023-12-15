@@ -1,4 +1,8 @@
 {
+  "appVersion": {
+    "message": "0.1.0",
+    "description": "The current version of the extension."
+  },
   "appName": {
     "message": "Audible Cover Grabber",
     "description": "The name of the extension."
