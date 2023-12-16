@@ -2,8 +2,8 @@ import type { BoxProps } from '@chakra-ui/react';
 import { Box, Image } from '@chakra-ui/react';
 import prettyBytes from 'pretty-bytes';
 import type { ReactEventHandler } from 'react';
-import React, { useState } from 'react';
-import type { AudibleBook } from 'utils/audible/types';
+import React, { useEffect, useRef, useState } from 'react';
+import getRemoteFileSize from 'utils/get-remote-file-size';
 
 const FloatingInfo = ({ children, ...props }: BoxProps) => (
   <Box
@@ -26,12 +26,20 @@ interface Resolution {
 }
 
 interface CoverProps {
-  book: AudibleBook;
-  fileSize: number | null;
+  coverUrl: string | undefined;
 }
 
-const Cover = ({ book, fileSize }: CoverProps) => {
+const Cover = ({ coverUrl }: CoverProps) => {
   const [resolution, setResolution] = useState<Resolution | null>(null);
+
+  const [imageBytes, setImageBytes] = useState<number | null>(null);
+  const hasInitializedImageBytes = useRef(false);
+  useEffect(() => {
+    if (!hasInitializedImageBytes.current && coverUrl) {
+      hasInitializedImageBytes.current = true;
+      getRemoteFileSize(coverUrl).then(setImageBytes);
+    }
+  }, [coverUrl]);
 
   const handleImageLoad: ReactEventHandler<HTMLImageElement> = (e) => {
     const { currentTarget } = e;
@@ -43,7 +51,7 @@ const Cover = ({ book, fileSize }: CoverProps) => {
 
   return (
     <Box position="relative" shadow="lg" rounded="lg" overflow="hidden">
-      {!!fileSize && (
+      {!!imageBytes && (
         <FloatingInfo
           top={0}
           left={0}
@@ -51,7 +59,7 @@ const Cover = ({ book, fileSize }: CoverProps) => {
           borderBottomWidth={1}
           borderRightWidth={1}
         >
-          {prettyBytes(fileSize)}
+          {prettyBytes(imageBytes)}
         </FloatingInfo>
       )}
       {!!resolution && (
@@ -65,11 +73,7 @@ const Cover = ({ book, fileSize }: CoverProps) => {
           {resolution.width} x {resolution.height}
         </FloatingInfo>
       )}
-      <Image
-        src={book.largeCoverUrl}
-        alt={`${book.title} Cover`}
-        onLoad={handleImageLoad}
-      />
+      <Image src={coverUrl} alt="" onLoad={handleImageLoad} />
     </Box>
   );
 };
