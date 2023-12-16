@@ -10,21 +10,29 @@ const Popup = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [book, setBook] = useState<AudibleBook | null>(null);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const intialize = async () => {
-      const [firstActiveTab] = await tabs.query({
-        active: true,
-        currentWindow: true,
-      });
+      try {
+        const [firstActiveTab] = await tabs.query({
+          active: true,
+          currentWindow: true,
+        });
 
-      if (firstActiveTab.url) {
-        const url = new URL(firstActiveTab.url);
-        const asin = url.pathname.split('/').filter(Boolean).pop();
-        if (asin && ASIN_REGEX.test(asin)) {
-          const audibleBook = await getAudibleBookInfo(asin);
-          setBook(audibleBook);
+        if (firstActiveTab.url) {
+          const url = new URL(firstActiveTab.url);
+          const asin = url.pathname.split('/').filter(Boolean).pop();
+          if (asin && ASIN_REGEX.test(asin)) {
+            const audibleBook = await getAudibleBookInfo(asin);
+            setBook(audibleBook);
+          }
         }
+      } catch (err) {
+        console.error(err);
+        setError(
+          `There was an error loading the book's information: ${err.message}`,
+        );
       }
       setIsLoading(false);
     };
@@ -35,6 +43,10 @@ const Popup = () => {
   const getContent = () => {
     if (isLoading) {
       return <Spinner />;
+    }
+
+    if (error) {
+      return <Box>{error}</Box>;
     }
 
     if (!book) {
