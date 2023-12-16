@@ -30,7 +30,7 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "audible-cover-grabber"
+      "id": "audible-cover-grabber@book-tools"
     }
   }
 }
