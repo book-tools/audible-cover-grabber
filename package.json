@@ -1,6 +1,6 @@
 {
   "name": "audible-cover-grabber",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A browser extension to get high resolution covers from Audible",
   "license": "./LICENSE.md",
   "author": "Chris Sandvik <chris.sandvik@gmail.com>",
