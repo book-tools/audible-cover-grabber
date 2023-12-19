@@ -9,5 +9,5 @@ const Index = () => (
   </ChakraProvider>
 );
 
-const root = ReactDOM.createRoot(document.getElementById('display-container')!);
+const root = ReactDOM.createRoot(document.getElementById('app')!);
 root.render(<Index />);

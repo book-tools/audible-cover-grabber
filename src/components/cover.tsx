@@ -3,6 +3,7 @@ import { Box, Image } from '@chakra-ui/react';
 import prettyBytes from 'pretty-bytes';
 import type { ReactEventHandler } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
+import type { Resolution } from 'types/image';
 import getRemoteFileSize from 'utils/get-remote-file-size';
 
 const FloatingInfo = ({ children, ...props }: BoxProps) => (
@@ -19,11 +20,6 @@ const FloatingInfo = ({ children, ...props }: BoxProps) => (
     {children}
   </Box>
 );
-
-interface Resolution {
-  height: number;
-  width: number;
-}
 
 interface CoverProps {
   coverUrl: string | undefined;

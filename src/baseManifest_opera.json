@@ -11,10 +11,24 @@
     "128": "assets/icons/icon128.png"
   },
   "default_locale": "en",
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content/content.js"]
+    }
+  ],
   "host_permissions": ["http://*/*", "https://*/*"],
+  "action": {
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png"
+    },
+    "default_title": "__MSG_appName__",
+    "default_popup": "popup/index.html"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["assets/*", "popup/*"],
+      "resources": ["assets/*", "content/*", "popup/*"],
       "matches": ["<all_urls>"]
     }
   ]

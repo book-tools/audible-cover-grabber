@@ -1,44 +1,69 @@
 import { DownloadIcon } from '@chakra-ui/icons';
-import { Box, Button, Center, Flex, Spinner } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Spinner,
+  useBoolean,
+} from '@chakra-ui/react';
 import Cover from 'components/cover';
-import React, { useEffect, useState } from 'react';
-import { ASIN_REGEX, getAudibleBookInfo } from 'utils/audible/audible';
+import React, { useEffect, useRef, useState } from 'react';
+import type { EXTResponse } from 'types/message';
 import type { AudibleBook } from 'utils/audible/types';
 import { tabs } from 'webextension-polyfill';
 
 const Popup = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [isLoading, setIsLoading] = useBoolean(true);
   const [book, setBook] = useState<AudibleBook | null>(null);
   const [error, setError] = useState<string>('');
 
+  const hasInitialized = useRef(false);
+  const hasRetriedInit = useRef(false);
   useEffect(() => {
+    if (hasInitialized.current) {
+      return;
+    }
+    hasInitialized.current = true;
+
     const intialize = async () => {
       try {
-        const [firstActiveTab] = await tabs.query({
+        const [activeTab] = await tabs.query({
           active: true,
           currentWindow: true,
         });
-
-        if (firstActiveTab.url) {
-          const url = new URL(firstActiveTab.url);
-          const asin = url.pathname.split('/').filter(Boolean).pop();
-          if (asin && ASIN_REGEX.test(asin)) {
-            const audibleBook = await getAudibleBookInfo(asin);
-            setBook(audibleBook);
-          }
+        if (!activeTab?.id) {
+          throw new Error('No active tab found');
         }
+        const audibleBookRes: EXTResponse = await tabs.sendMessage(
+          activeTab.id,
+          {
+            type: 'GET_CURRENT_BOOK',
+          },
+        );
+
+        setBook(audibleBookRes.data || null);
+
+        // TODO: Add a search for other books with the same title/author
+        // both on Audible (some Audible books are only available in certain regions)
+        // and iTunes for better cover resolution
+        setIsLoading.off();
       } catch (err) {
         console.error(err);
+        if (!hasRetriedInit.current) {
+          hasRetriedInit.current = true;
+          setTimeout(intialize, 100);
+          return;
+        }
+        setIsLoading.off();
         setError(
           `There was an error loading the book's information: ${err.message}`,
         );
       }
-      setIsLoading(false);
     };
 
     intialize();
-  }, []);
+  }, [setIsLoading]);
 
   const getContent = () => {
     if (isLoading) {

@@ -136,6 +136,7 @@ export const getOutput = (
  */
 export const getEntry = (sourceDir = Directories.SRC_DIR) => ({
   popup: [path.resolve(__dirname, `${sourceDir}/popup/index.tsx`)],
+  content: [path.resolve(__dirname, `${sourceDir}/content/index.ts`)],
 });
 
 /**
@@ -228,6 +229,7 @@ export const getResolves = () => ({
   alias: {
     utils: path.resolve(__dirname, './src/utils/'),
     popup: path.resolve(__dirname, './src/popup/'),
+    content: path.resolve(__dirname, './src/content/'),
     assets: path.resolve(__dirname, './src/assets/'),
     components: path.resolve(__dirname, './src/components/'),
     types: path.resolve(__dirname, './src/types/'),
@@ -282,6 +284,7 @@ export const getExtensionReloaderPlugins = () => [
     port: 9090,
     reloadPage: true,
     entries: {
+      contentScript: ['content'],
       extensionPage: ['popup'],
     },
   }),
