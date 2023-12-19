@@ -39,7 +39,24 @@ export const ASIN_REGEX = /^(B[\dA-Z]{9}|\d{9}(X|\d))$/;
  */
 
 const AUDIBLE_BASE_URL = 'https://www.audible.com';
-const API_BASE_URL = 'https://api.audible.com/1.0';
+
+const getApiBaseUrl = (urlOrAsin: string | undefined) => {
+  const API_BASE_URL = 'https://api.audible.com/1.0';
+
+  if (!urlOrAsin) {
+    return API_BASE_URL;
+  }
+
+  if (!isValidUrl(urlOrAsin)) {
+    return API_BASE_URL;
+  }
+
+  const url = new URL(urlOrAsin);
+
+  const replacedHost = url.host.replace('www.', 'api.');
+
+  return `${url.protocol}//${replacedHost}/1.0`;
+};
 
 const IMAGE_SIZES = [500, 1024];
 
@@ -179,7 +196,8 @@ export async function getAudibleChapters(
     params as Record<string, string>,
   );
 
-  const apiUrl = `${API_BASE_URL}/content/${asin}/metadata?${metadataUrlParams.toString()}`;
+  const apiBaseUrl = getApiBaseUrl(asinOrUrl);
+  const apiUrl = `${apiBaseUrl}/content/${asin}/metadata?${metadataUrlParams.toString()}`;
 
   const metadataRes = await fetch(apiUrl);
   const metadataResData: AudibleMetadataResponse = await metadataRes.json();
@@ -311,7 +329,8 @@ export const getAudibleBookInfo = async (asinOrUrl: string) => {
     image_sizes: IMAGE_SIZES.join(','),
   });
 
-  const apiUrl = `${API_BASE_URL}/catalog/products/${asin}?${apiUrlParams.toString()}`;
+  const apiBaseUrl = getApiBaseUrl(asinOrUrl);
+  const apiUrl = `${apiBaseUrl}/catalog/products/${asin}?${apiUrlParams.toString()}`;
 
   const audibleRes = await fetch(apiUrl);
   const audibleResData: AudibleCatalogItemResponse = await audibleRes.json();
@@ -353,10 +372,10 @@ interface SearchAudibleApiParams {
  * - reviews_sort_by: [MostHelpful, MostRecent]
  * - title: string
  */
-export async function searchAudibleApi({
-  keywords,
-  author,
-}: SearchAudibleApiParams = {}) {
+export async function searchAudibleApi(
+  { keywords, author }: SearchAudibleApiParams = {},
+  url?: string,
+) {
   const params = new URLSearchParams({
     ...(keywords && { keywords }),
     ...(author && { author }),
@@ -365,7 +384,8 @@ export async function searchAudibleApi({
     image_sizes: IMAGE_SIZES.join(','),
   });
 
-  const searchUrl = `${API_BASE_URL}/catalog/products?${params.toString()}`;
+  const apiBaseUrl = getApiBaseUrl(url);
+  const searchUrl = `${apiBaseUrl}/catalog/products?${params.toString()}`;
 
   const res = await fetch(searchUrl);
   const resData: AudibleCatalogSearchResponse = await res.json();
