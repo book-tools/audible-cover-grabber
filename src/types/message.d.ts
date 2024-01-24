@@ -1,4 +1,5 @@
 import type { AudibleBook } from 'utils/audible/types';
+import type { ItunesAudiobook } from 'utils/itunes/schemas/response';
 
 declare type EXTMessageType = 'GET_CURRENT_BOOK';
 
@@ -21,5 +22,8 @@ declare type EXTResponseType =
 
 declare type EXTResponse = {
   type: EXTResponseType;
-  data?: AudibleBook | null;
+  data?: {
+    audibleBook: AudibleBook | null;
+    itunesBooks: ItunesAudiobook[];
+  };
 };

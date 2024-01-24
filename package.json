@@ -41,7 +41,8 @@
     "pretty-bytes": "^6.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "webextension-polyfill": "^0.10.0"
+    "webextension-polyfill": "^0.10.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.254",

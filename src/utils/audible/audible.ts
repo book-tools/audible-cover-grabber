@@ -1,5 +1,6 @@
 /* eslint-disable prefer-destructuring */
 import type { Author, Chapter, Genre, Series } from 'types/book';
+import type { CountryAlpha2 } from 'utils/countries';
 import { cleanDescription, cleanSeriesTitle, cleanTitle } from 'utils/string';
 import { isValidUrl } from 'utils/url';
 import { parseAudibleChapters } from './chapters';
@@ -396,3 +397,25 @@ export async function searchAudibleApi(
 
   return audibleItems.filter(Boolean);
 }
+
+export const audibleHostToCountryCode: Record<string, CountryAlpha2> = {
+  'audible.ca': 'CA',
+  'audible.com.br': 'BR',
+  'audible.co.uk': 'GB',
+  'audible.com.au': 'AU',
+  'audible.de': 'DE',
+  'audible.in': 'IN',
+  'audible.it': 'IT',
+  'audible.fr': 'FR',
+  'audible.es': 'ES',
+  'audible.co.jp': 'JP',
+  'audible.com': 'US',
+};
+
+export const getCountryCodeFromAudibleHost = (host: string): CountryAlpha2 => {
+  const cleanHost = host.replace(/^www\./, '');
+
+  const matchingCountryCode = audibleHostToCountryCode[cleanHost];
+
+  return matchingCountryCode ?? 'US';
+};
