@@ -18,7 +18,7 @@ const findMatchingItunesBooks = (
   itunesData: ItunesAudiobookResponse,
 ): ItunesAudiobook[] => {
   return itunesData.results.filter((item) => {
-    if (!item.collectionName || !item.artistName) {
+    if (!item.artistName) {
       return false;
     }
 

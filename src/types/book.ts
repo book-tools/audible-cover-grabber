@@ -11,11 +11,6 @@ export interface Narrator {
   url?: string;
 }
 
-export interface Chapter {
-  title: string;
-  timeIntoBook: number;
-}
-
 export interface Cover {
   url?: string;
   path?: string;

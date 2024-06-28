@@ -1,27 +1,14 @@
 /* eslint-disable prefer-destructuring */
-import type { Author, Chapter, Genre, Series } from 'types/book';
+import type { Author, Genre, Series } from 'types/book';
 import type { CountryAlpha2 } from 'utils/countries';
 import { cleanDescription, cleanSeriesTitle, cleanTitle } from 'utils/string';
 import { isValidUrl } from 'utils/url';
-import { parseAudibleChapters } from './chapters';
-import {
-  AUDIBLE_CATALOG_RESPONSE_GROUPS,
-  AUDIBLE_METADATA_DRM_TYPES,
-  AUDIBLE_METADATA_QUALITIES,
-  AUDIBLE_METADATA_RESPONSE_GROUPS,
-} from './types';
+import { AUDIBLE_CATALOG_RESPONSE_GROUPS } from './types';
 import type {
   AudibleBook,
   AudibleCatalogItemResponse,
   AudibleCatalogSearchResponse,
-  AudibleCodec,
-  AudibleContentMetadata,
-  AudibleMetadataDrmType,
-  AudibleMetadataQuality,
-  AudibleMetadataResponse,
-  AudibleMetadataResponseGroup,
   AudibleProduct,
-  ParsedCodec,
 } from './types';
 
 export const ASIN_REGEX = /^(B[\dA-Z]{9}|\d{9}(X|\d))$/;
@@ -61,33 +48,6 @@ const getApiBaseUrl = (urlOrAsin: string | undefined) => {
 
 const IMAGE_SIZES = [500, 1024];
 
-const parseCodecs = (availableCodecs: AudibleCodec[]) => {
-  const mappedCodecs = availableCodecs.map((codec) => {
-    const baseCodec: ParsedCodec = {
-      codec: codec.enhanced_codec,
-      isKindleEnhanced: codec.is_kindle_enhanced,
-      format: codec.format,
-      name: codec.name,
-    };
-
-    if (codec.format === 'Format4') {
-      return baseCodec;
-    }
-
-    const nameValues = baseCodec.name.split('_');
-
-    if (nameValues.length === 3) {
-      baseCodec.baseName = nameValues[0];
-      baseCodec.sampleRate = Number(nameValues[1]);
-      baseCodec.bitRate = Number(nameValues[2]);
-    }
-
-    return baseCodec;
-  });
-
-  return mappedCodecs;
-};
-
 const getAsin = (asinOrUrl: string): string => {
   if (isValidUrl(asinOrUrl)) {
     // URL Probably in format:
@@ -111,105 +71,6 @@ const getAsin = (asinOrUrl: string): string => {
   return asinOrUrl.toUpperCase();
 };
 
-interface ChaptersResponse {
-  chapters?: Chapter[];
-  metadata?: AudibleContentMetadata;
-}
-
-interface AudibleMetadataOptions {
-  acr?: string;
-  /**
-   * The response data groups to return
-   *
-   * @defaultValue
-   * ["chapter_info", "always-returned" , "content_reference" , "content_url"]
-   */
-  responseGroups?: AudibleMetadataResponseGroup[];
-  drmType?: AudibleMetadataDrmType;
-  quality?: AudibleMetadataQuality;
-}
-
-interface AudibleMetadataParams {
-  acr?: string;
-  response_groups?: string;
-  drm_type?: AudibleMetadataDrmType;
-  quality?: AudibleMetadataQuality;
-}
-
-/**
- * GET /1.0/content/%\{asin\}/metadata
- * params
- *   response_groups: [chapter_info, always-returned, content_reference, content_url]
- *   acr:
- *   quality: [High, Normal, Extreme, Low]
- *   drm_type: [Mpeg, PlayReady, Hls, Dash, FairPlay, Widevine, HlsCmaf, Adrm]
- */
-export async function getAudibleChapters(
-  asinOrUrl: string,
-  options: AudibleMetadataOptions = {},
-): Promise<ChaptersResponse> {
-  // https://api.audible.com/1.0/content/B002V0TMJW/metadata?response_groups=chapter_info,always-returned,content_reference,content_url
-
-  const asin = getAsin(asinOrUrl);
-
-  const params: AudibleMetadataParams = {
-    response_groups: AUDIBLE_METADATA_RESPONSE_GROUPS.join(','),
-  };
-
-  if (options.responseGroups?.length) {
-    let newResponseGroups = options.responseGroups.filter((group) =>
-      AUDIBLE_METADATA_RESPONSE_GROUPS.includes(group),
-    );
-
-    newResponseGroups = [...new Set(newResponseGroups)];
-
-    if (newResponseGroups.length) {
-      params.response_groups = newResponseGroups.join(',');
-    }
-  }
-
-  // If an Audible ACR value is passed, just use that
-  if (options.acr) {
-    params.acr = options.acr;
-  }
-  // Otherwise, pass the search params for the highest quality AAX file available for download
-  else {
-    if (
-      options.drmType &&
-      AUDIBLE_METADATA_DRM_TYPES.includes(options.drmType)
-    ) {
-      params.drm_type = options.drmType;
-    } else {
-      params.drm_type = 'Adrm';
-    }
-
-    if (
-      options.quality &&
-      AUDIBLE_METADATA_QUALITIES.includes(options.quality)
-    ) {
-      params.quality = options.quality;
-    } else {
-      params.quality = 'High';
-    }
-  }
-
-  const metadataUrlParams = new URLSearchParams(
-    params as Record<string, string>,
-  );
-
-  const apiBaseUrl = getApiBaseUrl(asinOrUrl);
-  const apiUrl = `${apiBaseUrl}/content/${asin}/metadata?${metadataUrlParams.toString()}`;
-
-  const metadataRes = await fetch(apiUrl);
-  const metadataResData: AudibleMetadataResponse = await metadataRes.json();
-
-  const metadata = metadataResData.content_metadata;
-
-  const chapters = parseAudibleChapters(metadata.chapter_info);
-
-  return { chapters, metadata };
-}
-
 export const parseAudibleProduct = async (
   product: AudibleProduct,
 ): Promise<AudibleBook | null> => {
@@ -220,22 +81,6 @@ export const parseAudibleProduct = async (
       name: author.name,
       url: `${AUDIBLE_BASE_URL}/author/${author.asin}`,
     }));
-
-    let chaptersObj: ChaptersResponse = {};
-
-    try {
-      chaptersObj = await getAudibleChapters(product.asin);
-    } catch (err) {
-      console.error(`Error getting Audible chapters\n${err.stack}`);
-    }
-
-    let codecs: ParsedCodec[] = [];
-
-    try {
-      codecs = parseCodecs(product.available_codecs);
-    } catch (err) {
-      console.error(`Error parsing codecs\n${err.stack}`);
-    }
 
     let largeCoverUrl = '';
     let smallCoverUrl = '';
@@ -302,8 +147,6 @@ export const parseAudibleProduct = async (
       publisher: product.publisher_name,
       isAbridged: product.format_type !== 'unabridged',
       language: product.language,
-      codecs,
-      ...chaptersObj,
     };
   } catch (err) {
     console.error(`Error parsing book details\n${err.stack}`);

@@ -1,4 +1,4 @@
-import type { Author, Chapter, Genre, Narrator, Series } from 'types/book';
+import type { Author, Genre, Narrator, Series } from 'types/book';
 
 export interface AudibleChapter {
   length_ms: number;
@@ -287,7 +287,6 @@ export interface ParsedCodec {
 }
 
 export interface AudibleBook {
-  chapters?: Chapter[];
   metadata?: AudibleContentMetadata;
   copyright?: string;
   copyrightYear?: string;
@@ -311,5 +310,4 @@ export interface AudibleBook {
   publisher: string;
   isAbridged: boolean;
   language: string;
-  codecs: ParsedCodec[];
 }

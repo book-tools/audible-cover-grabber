@@ -5,6 +5,8 @@ import { z } from 'zod';
 export const explicitnessSchema = z.union([
   z.literal('notExplicit'),
   z.literal('explicit'),
+  z.literal('cleaned'),
+  z.string(),
 ]);
 
 export const itunesMusicSchema = z.object({
@@ -218,8 +220,8 @@ export const itunesAudiobookSchema = z
   .object({
     wrapperType: z.string(),
     collectionId: z.number(),
-    collectionName: z.string(),
-    collectionCensoredName: z.string(),
+    collectionName: z.string().default(''),
+    collectionCensoredName: z.string().default(''),
     collectionViewUrl: z.string(),
     artistId: z.number(),
     amgArtistId: z.number().optional(),
